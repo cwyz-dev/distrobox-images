@@ -12,7 +12,8 @@ RUN pacman -S --noconfirm --needed \
 	ripgrep fd \
 	python python-pip \
 	nodejs npm \
-	lua51 luarocks
+	lua51 luarocks \
+	tree-sitter-cli
 
 FROM packages AS minimized
 RUN pacman -Scc --noconfirm
