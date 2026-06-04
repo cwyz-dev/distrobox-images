@@ -3,30 +3,17 @@ FROM docker.io/library/archlinux:latest AS arch_base
 FROM arch_base AS arch_updated
 RUN pacman -Syu --noconfirm --needed
 
-FROM arch_updated AS packages
+FROM arch_updated AS base_packages
 RUN pacman -S --noconfirm --needed \
 	base-devel \
 	neovim \
-	git curl wget \
-	unzip gzip tar \
-	ripgrep fd \
-	python python-pip \
-	nodejs npm \
-	lua51 luarocks \
-	tree-sitter-cli
+	git ripgrep fd \
+	python \
+	npm
 
-FROM packages AS minimized
+FROM base_packages AS minimized
 RUN pacman -Scc --noconfirm
 
 FROM minimized
-ENV XDG_DATA_HOME = /opt/nvim/share
-ENV XDG_STATE_HOME = /opt/nvim/state
-ENV XDG_CACHE_HOME = /opt/nvim/cache
-
-FROM minimized AS configured
-ARG NVIM_CONFIG_URL
-RUN rm -rf /etc/xdg/nvim && \
-	git clone "${NVIM_CONFIG_URL}" /etc/xdg/nvim
-
-FROM configured
-RUN nvim --headless "+Lazy! sync" +qa
+WORKDIR /workspace
+CMD [ "sleep", "infinity" ]
