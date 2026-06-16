@@ -5,15 +5,38 @@ RUN pacman -Syu --noconfirm --needed
 
 FROM arch_updated AS base_packages
 RUN pacman -S --noconfirm --needed \
-	base-devel \
-	neovim \
-	git ripgrep fd \
+	git ripgrep fd unzip curl \
+	gcc make \
 	python \
 	npm
 
-FROM base_packages AS minimized
+FROM base_packages AS nvim_packages
+RUN pacman -S --noconfirm --needed \
+	neovim
+
+FROM nvim_packages AS plugin_packages
+# tree-sitter-cli => treesitter
+# cargo => blink.cmp
+RUN pacman -S --noconfirm --needed \
+	tree-sitter-cli \
+	cargo
+
+FROM plugin_packages AS lsp_packages
+RUN pacman -S --noconfirm --needed \
+	lua-language-server
+
+FROM lsp_packages AS minimized
 RUN pacman -Scc --noconfirm
 
-FROM minimized
+FROM minimized AS false_files
+RUN mkdir -p ~/.local/bin \
+	&& \
+	echo -e '#!bin/sh\nexit 0' > ~/.local/bin/xdg-open \
+	&& \
+	chmod +x ~/.local/bin/xdg-open \
+	&& \
+	echo -e 'export PATH="$HOME/.local/bin:$PATH' > ~/.bashrc
+
+FROM false_files
 WORKDIR /workspace
-CMD [ "sleep", "infinity" ]
+CMD [ "/usr/bin/nvim", "--headless", "--listen", "tmp/nvim.pipe" ]
