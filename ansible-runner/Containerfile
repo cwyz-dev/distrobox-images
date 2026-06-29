@@ -1,0 +1,12 @@
+FROM docker.io/alpine/ansible:latest AS ansible_base
+
+FROM ansible_base AS packages
+RUN apk add podman
+
+FROM packages AS galaxy
+RUN ansible-galaxy collection install containers.podman
+
+FROM galaxy
+RUN mkdir ansible
+WORKDIR ansible
+CMD ["ansible-playbook", "-i", "inventories/hosts.yaml", "playbooks/deploy.yaml"]

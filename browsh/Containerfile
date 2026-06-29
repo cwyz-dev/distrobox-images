@@ -1,0 +1,15 @@
+FROM docker.io/library/archlinux:latest AS arch_base
+
+FROM arch_base AS arch_updated
+RUN pacman -Syu --noconfirm --needed
+
+FROM arch_updated AS base_packages
+RUN pacman -S --noconfirm --needed \
+	firefox-nightly \
+	browsh
+
+FROM base_packages AS minimized
+RUN pacman -Scc --noconfirm
+
+FROM minimized
+CMD [ "/app/bin/browsh" ]

@@ -1,0 +1,7 @@
+FROM docker.io/library/archlinux:latest AS arch_base
+
+FROM arch_base AS arch_updated
+RUN pacman -Syu --noconfirm --needed
+
+FROM arch_updated AS base_packages
+#RUN pacman -S --noconfirm --needed \

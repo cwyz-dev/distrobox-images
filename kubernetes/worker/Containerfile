@@ -1,0 +1,3 @@
+FROM localhost/custom-kubernetes-archbase:latest AS packages
+RUN pacman -S --noconfirm --needed \
+	etcd kubernetes-node containerd

@@ -1,9 +1,4 @@
-FROM docker.io/library/archlinux:latest AS arch_base
-
-FROM arch_base AS arch_updated
-RUN pacman -Syu --noconfirm --needed
-
-FROM arch_updated AS base_packages
+FROM localhost/custom-arch:latest AS base_packages
 RUN pacman -S --noconfirm --needed \
 	git ripgrep fd unzip curl \
 	gcc make \
@@ -16,10 +11,8 @@ RUN pacman -S --noconfirm --needed \
 
 FROM nvim_packages AS plugin_packages
 # tree-sitter-cli => treesitter
-# cargo => blink.cmp
 RUN pacman -S --noconfirm --needed \
-	tree-sitter-cli \
-	cargo
+	tree-sitter-cli
 
 FROM plugin_packages AS lsp_packages
 RUN pacman -S --noconfirm --needed \
