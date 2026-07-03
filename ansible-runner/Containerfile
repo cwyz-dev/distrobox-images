@@ -8,7 +8,7 @@ RUN pacman -S --noconfirm --needed \
 
 FROM ansible_base AS packages
 RUN pacman -S --noconfirm --needed \
-	podman git
+	podman git openssh
 
 FROM packages AS galaxy
 RUN ansible-galaxy collection install containers.podman
