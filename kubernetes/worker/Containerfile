@@ -1,3 +1,5 @@
-FROM localhost/custom-kubernetes-archbase:latest AS packages
+ARG KUBE_ARCH_BASE=localhost/custom-kubernetes-archbase
+ARG KUBE_ARCH_TAG=latest
+FROM ${KUBE_ARCH_BASE}:${KUBE_ARCH_TAG} AS packages
 RUN pacman -S --noconfirm --needed \
 	etcd kubernetes-node containerd

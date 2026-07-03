@@ -1,2 +1,4 @@
-FROM localhost/custom-arch:latest AS swapoff
+ARG ARCH_BASE=localhost/custom-arch
+ARG ARCH_TAG=lateste
+FROM ${ARCH_BASE}:${ARCH_TAG}
 CMD ["sleep", "infinity"]

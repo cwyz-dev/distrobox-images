@@ -1,7 +1,14 @@
-FROM docker.io/alpine/ansible:latest AS ansible_base
+ARG ARCH_BASE=localhost/custom-arch
+ARG ARCH_TAG=latest
+FROM ${ARCH_BASE}:${ARCH_TAG} AS arch_base
+
+FROM arch_base AS ansible_base
+RUN pacman -S --noconfirm --needed \
+	ansible-core
 
 FROM ansible_base AS packages
-RUN apk add podman
+RUN pacman -S --noconfirm --needed \
+	podman git
 
 FROM packages AS galaxy
 RUN ansible-galaxy collection install containers.podman

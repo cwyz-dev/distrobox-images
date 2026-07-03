@@ -1,4 +1,6 @@
-FROM localhost/custom-arch:latest AS base_packages
+ARG ARCH_BASE=localhost/custom-arch
+ARG ARCH_TAG=latest
+FROM ${ARCH_BASE}:${ARCH_TAG} AS base_packages
 RUN pacman -S --noconfirm --needed \
 	git ripgrep fd unzip curl \
 	gcc make \
