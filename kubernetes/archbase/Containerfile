@@ -1,10 +1,18 @@
 ARG SSH_PUB_KEY=""
 ARG ARCH_BASE=localhost/custom-arch
 ARG ARCH_TAG=latest
-FROM ${ARCH_BASE}:${ARCH_TAG}
+FROM ${ARCH_BASE}:${ARCH_TAG} AS ssh
 ARG SSH_PUB_KEY
 RUN \
 	mkdir -p "/root/.ssh" \
 	&& \
 	echo ${SSH_PUB_KEY} >> "/root/.ssh/authorized_keys"
+
+FROM ssh AS packages
+RUN pacman -S --noconfirm --needed \
+	etcd containerd
+RUN \
+	mkdir -p /etc/containerd \
+	&& \
+	containerd config default > /etc/containerd/config.toml
 CMD ["sleep", "infinity"]
