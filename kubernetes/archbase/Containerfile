@@ -10,7 +10,7 @@ RUN \
 
 FROM ssh AS packages
 RUN pacman -S --noconfirm --needed \
-	etcd containerd
+	etcd containerd kubelet kube-proxy
 RUN \
 	mkdir -p /etc/containerd \
 	&& \

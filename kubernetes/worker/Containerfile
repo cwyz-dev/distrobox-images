@@ -1,5 +1,3 @@
 ARG KUBE_ARCH_BASE=localhost/custom-kubernetes-archbase
 ARG KUBE_ARCH_TAG=latest
-FROM ${KUBE_ARCH_BASE}:${KUBE_ARCH_TAG} AS packages
-RUN pacman -S --noconfirm --needed \
-	kubernetes-node
+FROM ${KUBE_ARCH_BASE}:${KUBE_ARCH_TAG}
